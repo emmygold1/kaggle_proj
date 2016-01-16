@@ -9,22 +9,16 @@ def evaluate(res, y_true):
     return - np.sum(np.log(probs)) / nrows
 
 
-def get_score(x, y, estimator, random_state=43):
+def get_score_evaluate(x, y, estimator, random_state=43):
     x_train, x_valid, y_train, y_valid = train_test_split(
         x, y, test_size=.33, random_state=random_state)
     estimator.fit(x_train, y_train)
     score_train = estimator.score(x_train, y_train)
     score_valid = estimator.score(x_valid, y_valid)
-    return score_train, score_valid
-
-
-def get_evaluate(x, y, estimator, random_state=4332):
-    x_train, x_valid, y_train, y_valid = train_test_split(
-        x, y, test_size=.33, random_state=random_state)
-    estimator.fit(x_train, y_train)
     evaluate_train = evaluate(estimator.predict_proba(x_train), y_train)
     evaluate_valid = evaluate(estimator.predict_proba(x_valid), y_valid)
-    return evaluate_train, evaluate_valid
+    return score_train, score_valid, evaluate_train, evaluate_valid
+
 
 train_event_start = 3
 test_event_start = train_event_start - 1
@@ -56,7 +50,7 @@ ranges = [
 
 def powerset(l):
     if not l: return [[]]
-    return p(l[1:]) + [[l[0]] + x for x in p(l[1:])]
+    return powerset(l[1:]) + [[l[0]] + x for x in powerset(l[1:])]
 
 def list_sum(args):
     res = []
