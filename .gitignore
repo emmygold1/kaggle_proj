@@ -1,6 +1,6 @@
 *.csv
 *.txt
-__pyche__
+__pycache__
 *.zip
 *.pyc
 .ipynb_checkpoints/
