@@ -3,7 +3,6 @@
 
 # In[1]:
 
-import numpy as np
 import pandas as pd
 import pickle
 from sklearn.ensemble import RandomForestClassifier
@@ -37,14 +36,12 @@ train.loc[:, 'click_time'] = pd.to_datetime(train.click_time, format='%Y-%m-%d %
 
 
 
-weights = [10, 100, 1000, 10000]
 split_time = '2017-11-09 00:00:00'
 
 
-for weight in weights:
-    print(weight)
-    rfc = RandomForestClassifier(n_estimators=25, class_weight={0: 1, 1: weight}, n_jobs=4)
-    rfc.fit(train.loc[train.click_time < split_time].iloc[:, :-2], train.loc[train.click_time < split_time].iloc[:, -1])
-    pred_prob = rfc.predict_proba(train.loc[train.click_time >= split_time].iloc[:, :-2])[:, 1]
-    with open('../results/random_forest_no_feat_eng_{}.pk'.format(weight), 'wb') as f:
-        pickle.dump((weight, roc_auc_score(train.loc[train.click_time >= split_time].iloc[:, -1], pred_prob), rfc), f)
+rfc = RandomForestClassifier(n_estimators=25, class_weight={0: 1, 1: 403}, n_jobs=4)
+rfc.fit(train.loc[train.click_time < split_time].iloc[:, :-2], train.loc[train.click_time < split_time].iloc[:, -1])
+pred_prob = rfc.predict_proba(train.loc[train.click_time >= split_time].iloc[:, :-2])[:, 1]
+print(roc_auc_score(train.loc[train.click_time >= split_time].iloc[:, -1], pred_prob))
+with open('../results/random_forest_no_feat_eng_403.pk', 'wb') as f:
+    pickle.dump(rfc, f)
