@@ -74,6 +74,10 @@ del train_sample
 import gc
 gc.collect()
 rfc = rfc[2]
-rfc.fit(train.iloc[:, :-1], train.iloc[:, -1])
-with open('../results/final_leverage.pk', 'wb') as f:
-    pickle.dump(rfc, f)
+n_batches = 10
+batch_size = train.shape[0] // n_batches
+for i in range(n_batches+1):
+    print(i)
+    rfc.fit(train.iloc[i*batch_size:(i+1)*batch_size, :-1], train.iloc[i*batch_size:(i+1)*batch_size, -1])
+    with open('../results/final_leverage.pk', 'wb') as f:
+        pickle.dump(rfc, f)
